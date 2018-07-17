@@ -22,7 +22,7 @@ exports.randomColorKey = function() {
 	return colorNames[colorIndex];
 }
 
-Number.prototype.pad = function (count) {
+Number.prototype.pad = function(count) {
    var num = this.valueOf();
    var ret = "";
    for (var i = 0; i < count - num.toString().length; i++) {
@@ -30,4 +30,8 @@ Number.prototype.pad = function (count) {
    }
    ret += num;
    return ret;
+}
+
+exports.random = function(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
