@@ -1,20 +1,23 @@
 'use strict';
 
 var utils = require("utils");
+var blocks = require("blocks");
 
-exports.firstPlayer = function firstPlayer(){
-  return utils.players()[0];
-};
-
-exports.firstDrone = function firstDrone() {
-	return new Drone(firstPlayer());
+if (!Math.trunc) {
+  Math.trunc = function(v) {
+    v = +v;
+    return (v - v % 1)   ||   (!isFinite(v) || v === 0 ? v : v < 0 ? -0 : 0);
+  };
 }
 
-exports.udef = function(variable, defaultValue) {
-	return (typeof variable == 'undefined') 
-		? defaultValue
-		: variable;
+var _udef = function(variable, defaultValue) {
+  return (typeof variable == 'undefined') 
+    ? defaultValue
+    : variable;
 }
+
+
+exports.udef = _udef;
 
 exports.randomColorKey = function() {
 	var colorNames = Object.keys(require("block-colors"));
