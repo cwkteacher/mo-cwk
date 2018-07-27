@@ -19,6 +19,19 @@ var _udef = function(variable, defaultValue) {
 
 exports.udef = _udef;
 
+// Get a reference to a random rainbowblock
+exports.rainbowBlock = function() {
+  var rainbowItem = _random(0,blocks.rainbow.length-1);
+  return blocks.rainbow[rainbowItem];
+}
+
+/* Get a random rainbow block
+ */
+exports.placeRainbowBlock = function(drone) {
+  var rainbowItem = _random(0,blocks.rainbow.length-1);
+  drone.box(blocks.rainbow[rainbowItem],1,1,1,true);  // don't schedule
+}
+
 exports.randomColorKey = function() {
 	var colorNames = Object.keys(require("block-colors"));
 	var colorIndex = Math.floor(Math.random()*colorNames.length);
@@ -52,11 +65,61 @@ exports.requireParameters = function(parameters, minimum) {
   }
 }
 
+// Return a new drone.
+exports.drone = function(arg1)
+{
+  var drone = new Drone(arg1);
+  // Move out of prototype.. (consider fixing in open source)
+  // Having in prototype makes it a static class variable so
+  // the drone namespace gets all checkpoints
+  drone._checkpoints = {};  
+  return drone;
+}
+
 exports.playersMsg = function(msg)
 {
   utils.players(function(player) {
     echo(player, msg.replace("{player-name}", player.name));
   });
+}
+
+// Get the [blocktype:data] formatted string of the current
+// block the drone is positioned on.
+// @returns [string] matches the values from the blocks 
+// used in scriptcraft
+
+    /* Messed around for a bunch here trying to use the
+      current API from spigot but just didn't cooperate
+      so gave up on getBlockData and used depracated getData
+      which does work.. go figure??
+      Seems to me the bukkit api around this stuff is
+      a big mess and could use a decent wrapper to
+      clean it up.
+
+      These functions also may be useful in future to split
+      the data apart? 
+      function getBlockType(block) {
+        return playerDrone.getBlockIdAndMeta(block)[0];
+      }
+
+      function getBlockColor(block) {
+        return playerDrone.getBlockIdAndMeta(block)[1];
+      }
+    */
+exports.getDroneBlockId = function(drone) {
+  var id = "";
+  var blockType = drone.getBlock().getType();
+  console.log(blockType);
+  if (typeof blockType != "undefined") {
+    var tmp = drone.getBlockIdAndMeta(blockType);
+    if (typeof tmp != "undefined")
+     id = id + tmp[0];
+  }
+  var data = drone.getBlock().getData();
+  if (data) {
+    id = id + ":" + data;
+  }
+  return id;
 }
 
 /*
