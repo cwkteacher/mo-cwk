@@ -2,6 +2,69 @@
 
 var utils = require("utils");
 var blocks = require("blocks");
+var drone = require("drone");
+var events = require("events");
+
+function addArmor(stacks, material) {
+  var material = org.bukkit.Material[material];
+  var stack = new org.bukkit.inventory.ItemStack(material);
+
+  stacks.push(stack);
+}
+
+function stripArmor(player) {
+    player.getInventory().setArmorContents(null);
+}
+
+// Equip type of armor, type must be like "DIAMOND" "GOLD" etc.
+function equipArmor(player, type) {
+  var stacks = [];
+
+  addArmor(stacks, type + '_BOOTS');
+  addArmor(stacks, type + '_LEGGINGS');
+  addArmor(stacks, type + '_CHESTPLATE');
+  addArmor(stacks, type + '_BLOCK');
+
+  player.getInventory().setArmorContents(stacks);
+}
+
+exports.equipArmor = equipArmor;
+exports.stripArmor = stripArmor;
+
+exports.pvpDamage = function(e) {
+  events.entityDamageByEntity(function(e) {
+    var EntityType = Packages.org.bukkit.entity.EntityType;
+
+      if (e.getEntity().getType() == EntityType.PLAYER 
+        && e.getDamager().getType() == EntityType.PLAYER) 
+      {
+          var whoWasHit = e.getEntity();
+          var whoHit = e.getDamager();
+
+         func.call(whoHit, whoWasHit, cancel);
+      }
+  });
+}
+
+drone.prototype.arena = function(block, width, height, depth)
+{
+  var halfWidth = width/2;
+  var halfDepth = depth/2;
+
+  this
+    .chkpt('arena')
+    .back(halfDepth)
+    .left(halfWidth)
+    .box0(block, width, height, depth)
+    .box(block, width, 1, depth)
+    .fwd()
+    .right()
+    .up()
+    .box(blocks.air, width-2, height-2, depth-2)
+    .move('arena');
+
+  return this;
+}
 
 if (!Math.trunc) {
   Math.trunc = function(v) {
