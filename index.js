@@ -31,17 +31,20 @@ function equipArmor(player, type) {
 exports.equipArmor = equipArmor;
 exports.stripArmor = stripArmor;
 
-exports.pvpDamage = function(e) {
-  events.entityDamageByEntity(function(e) {
+exports.pvpDamage = function(func) {
+  events.entityDamageByEntity(function(e, cancel) {
+   console.log("entityDamageByEntity!");
+
     var EntityType = Packages.org.bukkit.entity.EntityType;
 
-      if (e.getEntity().getType() == EntityType.PLAYER 
-        && e.getDamager().getType() == EntityType.PLAYER) 
-      {
-          var whoWasHit = e.getEntity();
-          var whoHit = e.getDamager();
+      var whoWasHit = e.getEntity();
+      var whoHit = e.getDamager();
 
-         func.call(whoHit, whoWasHit, cancel);
+      if (whoHit.getType() == EntityType.PLAYER 
+        && whoWasHit.getType() == EntityType.PLAYER) 
+      {
+          console.log("thisentity" + this);
+          func.call(this, whoHit, whoWasHit, cancel);
       }
   });
 }
@@ -115,7 +118,7 @@ var _random = function(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 exports.random = _random;
-
+ 
 exports.requireOp = function(player) {
   if ( !isOp(player) ) {
       throw player.name + " is not op";
