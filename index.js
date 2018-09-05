@@ -118,7 +118,7 @@ var _random = function(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 exports.random = _random;
- 
+
 exports.requireOp = function(player) {
   if ( !isOp(player) ) {
       throw player.name + " is not op";
